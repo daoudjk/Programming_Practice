@@ -45,9 +45,65 @@ def max_series_product(collection):
 def calcMaxHorizontalProduct(grid):
     result = 0
     result = max(map(max_series_product, (row for row in grid)))
-    print(result)
+    return result
 
 def calcMaxVerticalProduct(grid):
     result = 0
-    result = max(map())
-calcMaxHorizontalProduct(grid)
+    grid = list(map(list, zip(*grid)))
+    result = max(map(max_series_product, (column for column in grid)))
+    return result
+
+def get_diags(grid):
+    for i in range(len(grid)-1,-1,-1):
+        xPos = 0
+        yPos = i
+        diag_list = []
+        while(yPos < 20 and xPos < 20):
+            diag_list.append(grid[xPos][yPos])
+            xPos += 1
+            yPos += 1
+        if len(diag_list) >= 4:
+            yield diag_list
+
+    for i in range(len(grid)):
+        xPos = i + 1
+        yPos = 0
+        diag_list = []
+        while(yPos < 20 and xPos < 20):
+            diag_list.append(grid[xPos][yPos])
+            xPos += 1
+            yPos += 1
+        if len(diag_list) >= 4:
+            yield diag_list
+
+    for i in range(len(grid)-1,-1,-1):
+        xPos = i
+        yPos = i
+        diag_list = []
+        while(yPos < 20 and xPos < 20):
+            diag_list.append(grid[xPos][yPos])
+            xPos -= 1
+            yPos += 1
+        if len(diag_list) >= 4:
+            yield diag_list
+
+    for i in range(len(grid)):
+        xPos = i - 1
+        yPos = 0
+        diag_list = []
+        while(yPos < 20 and xPos < 20):
+            diag_list.append(grid[xPos][yPos])
+            xPos -= 1
+            yPos += 1
+        if len(diag_list) >= 4:
+            yield diag_list
+
+def calcMaxDiagonalProduct(grid):
+    result = 0
+    
+    result = max(map(max_series_product, (diagonal for diagonal in get_diags(grid))))
+    
+    return result
+
+maxProd = max(calcMaxHorizontalProduct(grid), calcMaxVerticalProduct(grid), calcMaxDiagonalProduct(grid))
+print(maxProd)
